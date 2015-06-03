@@ -90,6 +90,8 @@ public class MappingPanel extends JPanel implements MouseListener, MouseMotionLi
 	private boolean					showingArrowStarts			= false;
 
 	private DetailsListener			detailsListener;
+	
+	public boolean					showCommented				= true;
 
 	@SuppressWarnings("serial")
 	public MappingPanel(Mapping<?> mapping) {
@@ -169,6 +171,7 @@ public class MappingPanel extends JPanel implements MouseListener, MouseMotionLi
 		for (ItemToItemMap map : mapping.getSourceToCdmMaps()) {
 			Arrow component = new Arrow(getComponentWithItem(map.getSourceItem(), sourceComponents), getComponentWithItem(map.getCdmItem(), targetComponents));
 			arrows.add(component);
+			if (!(showCommented) && !(map.getComment().equals(""))) arrows.remove(component);
 		}
 		layoutItems();
 		repaint();

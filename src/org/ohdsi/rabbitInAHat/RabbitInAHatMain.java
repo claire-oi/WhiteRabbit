@@ -55,6 +55,8 @@ public class RabbitInAHatMain implements ResizeListener, ActionListener {
 	public final static String		ACTION_CMD_FILTER					= "Filter";
 	public final static String		ACTION_CMD_MAKE_MAPPING				= "Make Mappings";
 	public final static String		ACTION_CMD_REMOVE_MAPPING			= "Remove Mappings";
+	public final static String		ACTION_CMD_HIDE_COMMENTED			= "Hide Commented Arrows";
+	public final static String		ACTION_CMD_SHOW_COMMENTED			= "Show Commented Arrows";
 	
 	private final static FileFilter	FILE_FILTER_GZ					= new FileNameExtensionFilter("GZIP Files (*.gz)", "gz");
 	private final static FileFilter	FILE_FILTER_DOCX					= new FileNameExtensionFilter("Microsoft Word documents (*.docx)", "docx");
@@ -210,6 +212,18 @@ public class RabbitInAHatMain implements ResizeListener, ActionListener {
 		removeMappings.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));		
 		editMenu.add(removeMappings);
 		
+		JMenuItem hideCommented = new JMenuItem(ACTION_CMD_HIDE_COMMENTED);
+		hideCommented.addActionListener(this);
+		hideCommented.setActionCommand(ACTION_CMD_HIDE_COMMENTED);
+		hideCommented.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));		
+		editMenu.add(hideCommented);
+		
+		JMenuItem showCommented = new JMenuItem(ACTION_CMD_SHOW_COMMENTED);
+		showCommented.addActionListener(this);
+		showCommented.setActionCommand(ACTION_CMD_SHOW_COMMENTED);
+		showCommented.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK));		
+		editMenu.add(showCommented);
+		
 		// JMenu viewMenu = new JMenu("View");
 		// menuBar.add(viewMenu);
 
@@ -224,14 +238,14 @@ public class RabbitInAHatMain implements ResizeListener, ActionListener {
 			scrollPane2.setVisible(!maximized);
 
 		if (!maximized)
-			scrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+			scrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		else
-			scrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+			scrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		if (!minimized)
-			scrollPane2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+			scrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		else
-			scrollPane2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+			scrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		tableFieldSplitPane.setDividerLocation(height);
 	}
@@ -306,6 +320,12 @@ public class RabbitInAHatMain implements ResizeListener, ActionListener {
 				break;
 			case ACTION_CMD_REMOVE_MAPPING:
 				doRemoveMappings();
+				break;
+			case ACTION_CMD_HIDE_COMMENTED:
+				doHideCommented();
+				break;
+			case ACTION_CMD_SHOW_COMMENTED:
+				doShowCommented();
 				break;
 		}
 	}
@@ -383,5 +403,15 @@ public class RabbitInAHatMain implements ResizeListener, ActionListener {
 			ETLDocumentGenerator.generate(ObjectExchange.etl, filename);
 			frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
+	}
+	
+	private void doHideCommented() {
+		tableMappingPanel.showCommented = false;
+		tableMappingPanel.setShowOnlyConnectedItems(true);
+	}
+	
+	private void doShowCommented() {
+		tableMappingPanel.showCommented = true;
+		tableMappingPanel.setShowOnlyConnectedItems(true);
 	}
 }
