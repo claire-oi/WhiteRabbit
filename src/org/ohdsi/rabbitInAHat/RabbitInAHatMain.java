@@ -25,6 +25,8 @@ import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -212,17 +214,14 @@ public class RabbitInAHatMain implements ResizeListener, ActionListener {
 		removeMappings.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));		
 		editMenu.add(removeMappings);
 		
-		JMenuItem hideCommented = new JMenuItem(ACTION_CMD_HIDE_COMMENTED);
-		hideCommented.addActionListener(this);
-		hideCommented.setActionCommand(ACTION_CMD_HIDE_COMMENTED);
-		hideCommented.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));		
+		final JCheckBoxMenuItem hideCommented = new JCheckBoxMenuItem(ACTION_CMD_HIDE_COMMENTED);
+		hideCommented.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (hideCommented.isSelected()) doHideCommented();
+				else doShowCommented();
+			}
+		});
 		editMenu.add(hideCommented);
-		
-		JMenuItem showCommented = new JMenuItem(ACTION_CMD_SHOW_COMMENTED);
-		showCommented.addActionListener(this);
-		showCommented.setActionCommand(ACTION_CMD_SHOW_COMMENTED);
-		showCommented.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK));		
-		editMenu.add(showCommented);
 		
 		// JMenu viewMenu = new JMenu("View");
 		// menuBar.add(viewMenu);
@@ -321,12 +320,6 @@ public class RabbitInAHatMain implements ResizeListener, ActionListener {
 			case ACTION_CMD_REMOVE_MAPPING:
 				doRemoveMappings();
 				break;
-			case ACTION_CMD_HIDE_COMMENTED:
-				doHideCommented();
-				break;
-			case ACTION_CMD_SHOW_COMMENTED:
-				doShowCommented();
-				break;
 		}
 	}
 	
@@ -406,16 +399,20 @@ public class RabbitInAHatMain implements ResizeListener, ActionListener {
 	}
 	
 	private void doHideCommented() {
-		tableMappingPanel.showCommented = false;
-		tableMappingPanel.setShowOnlyConnectedItems(false);
 		fieldMappingPanel.showCommented = false;
+		tableMappingPanel.showCommented = false;
 		fieldMappingPanel.setShowOnlyConnectedItems(false);
+		tableMappingPanel.setShowOnlyConnectedItems(false);
+		tableMappingPanel.setVisible(true);
+
 	}
 	
 	private void doShowCommented() {
-		tableMappingPanel.showCommented = true;
-		tableMappingPanel.setShowOnlyConnectedItems(false);
 		fieldMappingPanel.showCommented = true;
+		tableMappingPanel.showCommented = true;
 		fieldMappingPanel.setShowOnlyConnectedItems(false);
+		tableMappingPanel.setShowOnlyConnectedItems(false);
+		tableMappingPanel.setVisible(true);
+
 	}
 }
